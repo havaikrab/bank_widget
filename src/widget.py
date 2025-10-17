@@ -16,3 +16,12 @@ def mask_account_card(requisites: str) -> str:
         requisites_type = requisites_type.strip()
         requisites_mask = requisites_type + ' ' + get_mask_card_number(requisites_number)
     return requisites_mask
+
+
+def get_date(detailed_log: str) -> str:
+    """Возвращает дату лога"""
+    data_list = detailed_log.split('-')
+    day = data_list[2][:2]
+    data_list[2] = day
+    data = '.'.join(data_list[::-1])
+    return data
