@@ -2,11 +2,11 @@ def filter_by_state(dicts_list: list, state: str = "EXECUTED") -> list:
     '''Возвращает список словарей с указанным значением state из передаваемого списка словарей,
     по умолчанию state = "EXECUTED"'''
 
-    filtred_list = []
+    filtered_list = []
     for dict in dicts_list:
         if dict.get("state") == state:
-            filtred_list.append(dict)
-    return filtred_list
+            filtered_list.append(dict)
+    return filtered_list
 
 
 def sort_by_date(dicts_list: list, sort_reverse: bool = True) -> list:
