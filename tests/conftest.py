@@ -18,7 +18,7 @@ def card_number_empty():
 
 @pytest.fixture
 def card_number_invalid():
-    return '1234567890qwerty'
+    return "1234567890qwerty"
 
 
 @pytest.fixture
@@ -43,7 +43,7 @@ def account_empty():
 
 @pytest.fixture
 def account_invalid():
-    return '1234567890qwerty'
+    return "1234567890qwerty"
 
 
 @pytest.fixture
