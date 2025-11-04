@@ -2,13 +2,14 @@ import pytest
 
 
 @pytest.fixture
-def card_number_standart():
-    return 1234567890098765
+def card_number_standard():
+    return int(1022033304444055555)
 
 @pytest.fixture
 def card_number_short():
-    return 9876543210
+    return int(1029384756102)
 
 @pytest.fixture
 def card_number_long():
-    return 122333444455555666666
+    return int(6668884442221113335)
+
