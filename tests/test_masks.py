@@ -33,3 +33,35 @@ def test_get_mask_card_number_invalid(card_number_invalid):
 def test_get_mask_card_number_float(card_number_float):
     with pytest.raises(TypeError):
         masks.get_mask_card_number(card_number_float)
+
+
+@pytest.mark.parametrize('account, expected_mask', [(123456789098765, '**8765'),
+                                                        (9998887776665554443210, '**3210'),
+                                                        (1223334444555556666667777777888888, '**8888')])
+def test_get_mask_account(account: int, expected_mask: str):
+    assert masks.get_mask_account(account) == expected_mask
+
+
+def test_get_mask_account_too_short(account_too_short):
+    with pytest.raises(ValueError):
+        masks.get_mask_account(account_too_short)
+
+
+def test_get_mask_account_too_long(account_too_long):
+    with pytest.raises(ValueError):
+        masks.get_mask_account(account_too_long)
+
+
+def test_get_mask_account_empty(account_empty):
+    with pytest.raises(TypeError):
+        masks.get_mask_account(account_empty)
+
+
+def test_get_mask_account_invalid(account_invalid):
+    with pytest.raises(TypeError):
+        masks.get_mask_account(account_invalid)
+
+
+def test_get_mask_account_float(account_float):
+    with pytest.raises(TypeError):
+        masks.get_mask_account(account_float)

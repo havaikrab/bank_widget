@@ -17,9 +17,11 @@ def get_mask_card_number(card_number: int) -> str:
 def get_mask_account(account: int) -> str:
     """Возвращает маску намера счета"""
 
-    end_str = str(account)[-4:]
-    masked_account = "**" + end_str
-    return masked_account
-
-
-print(get_mask_card_number(1214124213456789))
+    if not isinstance(account, int):
+        raise TypeError("Некорректный номер счета")
+    if 14 < len(str(account)) < 35:
+        end_str = str(account)[-4:]
+        masked_account = "**" + end_str
+        return masked_account
+    else:
+        raise ValueError("Некорректный номер счета")
