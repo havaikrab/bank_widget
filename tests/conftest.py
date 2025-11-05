@@ -74,3 +74,13 @@ def requisites_mixed():
 @pytest.fixture
 def requisites_unexpected_symbols():
     return 'Счет №09876543210987654321'
+
+
+@pytest.fixture
+def requisites_too_long_number():
+    return 'Счёт 10220333044440555550666666077777770888888880999999999'
+
+
+@pytest.fixture
+def requisites_too_short_number():
+    return 'Счёт 1234567890'

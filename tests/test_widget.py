@@ -51,3 +51,21 @@ def test_mask_account_card_mixed_requisites(requisites_mixed):
 def test_mask_account_card_unexpected_symbols(requisites_unexpected_symbols):
     with pytest.raises(ValueError):
         widget.mask_account_card(requisites_unexpected_symbols)
+
+
+def test_mask_account_card_too_long_number(requisites_too_long_number):
+    with pytest.raises(ValueError):
+        widget.mask_account_card(requisites_too_long_number)
+
+
+def test_mask_account_card_too_short_number(requisites_too_short_number):
+    with pytest.raises(ValueError):
+        widget.mask_account_card(requisites_too_short_number)
+
+
+@pytest.mark.parametrize('detailed_log, expected_date', [('2024-03-11T02:26:18.671407', '11.03.2024'),
+                                                       ('2999-12-31T23:59:59.999999', '31.12.2999'),
+                                                       ('1988-10-04T08:50:11.1', '04.10.1988'),
+                                                       ('4123-01-12T00:00:00.0', '12.01.4123')])
+def test_get_date(detailed_log, expected_date):
+    assert widget.get_date(detailed_log) == expected_date

@@ -6,6 +6,7 @@ def mask_account_card(requisites: str) -> str:
 
     if not isinstance(requisites, str):
         raise TypeError("Некорректный формат ввода реквизитов")
+
     requisites_number = ""
     requisites_type = ""
     requisites_type_no_spaces = ""
@@ -48,8 +49,19 @@ def mask_account_card(requisites: str) -> str:
 def get_date(detailed_log: str) -> str:
     """Возвращает дату лога"""
 
-    data_list = detailed_log.split("-")
-    day = data_list[2][:2]
-    data_list[2] = day
-    data = ".".join(data_list[::-1])
-    return data
+    if not isinstance(detailed_log, str):
+        raise TypeError("Некорректный формат лога")
+    if detailed_log.count('-') != 2 or len(detailed_log) == 0:
+        raise ValueError("Некорректный формат лога")
+
+    date_list = detailed_log.split("-")
+    if len(date_list[0]) != 4 or len(date_list[1]) != 2 or len(date_list[2]) < 13:
+        raise ValueError("Некорректный формат лога")
+
+    day = date_list[2][:2]
+    date_list[2] = day
+    if not "".join(date_list).isdigit():
+        raise ValueError("Некорректный формат лога")
+
+    date = ".".join(date_list[::-1])
+    return date
