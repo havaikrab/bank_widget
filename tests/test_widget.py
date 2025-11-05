@@ -64,8 +64,32 @@ def test_mask_account_card_too_short_number(requisites_too_short_number):
 
 
 @pytest.mark.parametrize('detailed_log, expected_date', [('2024-03-11T02:26:18.671407', '11.03.2024'),
-                                                       ('2999-12-31T23:59:59.999999', '31.12.2999'),
-                                                       ('1988-10-04T08:50:11.1', '04.10.1988'),
-                                                       ('4123-01-12T00:00:00.0', '12.01.4123')])
+                                                         ('2999-12-31T23:59:59.999999', '31.12.2999'),
+                                                         ('1988-10-04T08:50:11.1', '04.10.1988'),
+                                                         ('4123-01-12T00:00:00.0', '12.01.4123'),
+                                                         ('9999-12-31T23:59:59.999999', '31.12.9999')])
 def test_get_date(detailed_log, expected_date):
     assert widget.get_date(detailed_log) == expected_date
+
+
+def test_get_date_empty(log_empty):
+    with pytest.raises(TypeError):
+        widget.get_date(log_empty)
+
+
+def test_get_date_invalid_type(log_invalid_type):
+    with pytest.raises(TypeError):
+        widget.get_date(log_invalid_type)
+
+
+@pytest.mark.parametrize('invalid_log', [('2024-03-11T02-26-18.671407'),
+                                         (''),
+                                         ('24-03-11T02:26:18.671407'),
+                                         ('2024-3-11T02:26:18.671407'),
+                                         ('2024-03-11T02:26:18'),
+                                         ('2o24-o3-11T02:26:18.671407'),
+                                         ('2024-14-05T02:26:18.671407'),
+                                         ('2024-03-32T02:26:18.671407')])
+def test_get_date_invalid_format(invalid_log):
+    with pytest.raises(ValueError):
+        widget.get_date(invalid_log)

@@ -60,7 +60,7 @@ def get_date(detailed_log: str) -> str:
 
     day = date_list[2][:2]
     date_list[2] = day
-    if not "".join(date_list).isdigit():
+    if not "".join(date_list).isdigit() or int(date_list[1]) > 12 or int(date_list[2]) > 31:
         raise ValueError("Некорректный формат лога")
 
     date = ".".join(date_list[::-1])

@@ -84,3 +84,13 @@ def requisites_too_long_number():
 @pytest.fixture
 def requisites_too_short_number():
     return 'Счёт 1234567890'
+
+
+@pytest.fixture
+def log_empty():
+    return None
+
+
+@pytest.fixture
+def log_invalid_type():
+    return {'Day': '12', 'Month': '12', 'Year': '2012'}
