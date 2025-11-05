@@ -39,3 +39,23 @@ def account_empty():
 @pytest.fixture
 def account_invalid():
     return 1234567890
+
+
+@pytest.fixture
+def requisites_invalid():
+    return ['Visa Gold', 1234567890]
+
+
+@pytest.fixture
+def requisites_no_type():
+    return '  12313524357468585  '
+
+
+@pytest.fixture
+def requisites_no_number():
+    return '  Visa - Platinum  '
+
+
+@pytest.fixture
+def requisites_empty():
+    return None
