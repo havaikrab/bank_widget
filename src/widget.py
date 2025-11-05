@@ -4,19 +4,21 @@ from src import masks
 def mask_account_card(requisites: str) -> str:
     """Возвращает маску номера счета или карты"""
 
+    if not isinstance(requisites, str):
+        raise TypeError("Некорректный формат ввода реквизитов")
     requisites_number = ""
     requisites_type = ""
     requisites_type_no_spaces = ""
 
     for i in requisites:
-        if i.isdigit() and len(requisites_type_no_spaces) != 0:
-            requisites_number += i
-        elif i.isdigit() and len(requisites_type_no_spaces) == 0:
-            raise ValueError("Некорректный формат ввода реквизитов")
-        elif i.isalpha() and len(requisites_number) == 0:
+        if i.isalpha() and len(requisites_number) == 0:
             requisites_type += i
             requisites_type_no_spaces += i
         elif i.isalpha() and len(requisites_number) != 0:
+            raise ValueError("Некорректный формат ввода реквизитов")
+        elif i.isdigit() and len(requisites_type_no_spaces) != 0:
+            requisites_number += i
+        elif i.isdigit() and len(requisites_type_no_spaces) == 0:
             raise ValueError("Некорректный формат ввода реквизитов")
         elif i == " ":
             requisites_type += i
