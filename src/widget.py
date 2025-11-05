@@ -30,14 +30,14 @@ def mask_account_card(requisites: str) -> str:
         raise ValueError("Некорректный формат ввода реквизитов")
 
     requisites_type = requisites_type.strip()
-    if ' ' in requisites_type:
+    if " " in requisites_type:
         requisites_type_list = []
         for i in requisites_type:
             if i.isalpha():
                 requisites_type_list.append(i)
             elif requisites_type_list[-1].isalpha():
                 requisites_type_list.append(i)
-        requisites_type = ''.join(requisites_type_list)
+        requisites_type = "".join(requisites_type_list)
 
     if requisites_type.lower() == "счет" or requisites_type.lower() == "счёт":
         requisites_mask = "Счет " + masks.get_mask_account(requisites_number)
@@ -51,7 +51,7 @@ def get_date(detailed_log: str) -> str:
 
     if not isinstance(detailed_log, str):
         raise TypeError("Некорректный формат лога")
-    if detailed_log.count('-') != 2 or len(detailed_log) == 0:
+    if detailed_log.count("-") != 2 or len(detailed_log) == 0:
         raise ValueError("Некорректный формат лога")
 
     date_list = detailed_log.split("-")
