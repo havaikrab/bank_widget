@@ -12,7 +12,7 @@ def mask_account_card(requisites: str) -> str:
         elif i.isalpha() or i == " ":
             requisites_type += i
     if "счет" in requisites_type.lower() or "счёт" in requisites_type.lower():
-        requisites_mask = "Счет " + masks.get_mask_account(int(requisites_number))
+        requisites_mask = "Счет " + masks.get_mask_account(requisites_number)
     else:
         requisites_type = requisites_type.strip()
         if ' ' in requisites_type:
@@ -23,7 +23,7 @@ def mask_account_card(requisites: str) -> str:
                 elif requisites_type_list[-1].isalpha():
                     requisites_type_list.append(i)
             requisites_type = ''.join(requisites_type_list)
-        requisites_mask = requisites_type + " " + masks.get_mask_card_number(int(requisites_number))
+        requisites_mask = requisites_type + " " + masks.get_mask_card_number(requisites_number)
     return str(requisites_mask)
 
 
