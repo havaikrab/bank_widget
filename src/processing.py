@@ -30,7 +30,7 @@ def sort_by_date(dicts_list: list, sort_reverse: bool = True) -> list:
 
     for d in dicts_list:
         if not isinstance(d, Dict):
-            raise TypeError("Некорректный формат данных")
+            raise ValueError("Некорректный формат данных")
         elif 'id' not in d or 'state' not in d or 'date' not in d or len(d['date']) < 21:
             raise ValueError("Некорректный формат данных")
 
@@ -38,7 +38,7 @@ def sort_by_date(dicts_list: list, sort_reverse: bool = True) -> list:
         for i in range(len(d['date'])):
             if not d['date'][i].isdigit():
                 if d['date'][i] != symbol_index_dict[i]:
-                    raise ValueError("Некорректный формат данных")
+                    raise KeyError("Некорректный формат данных")
 
     sorted_list = sorted(dicts_list, key=lambda dictionary: dictionary["date"], reverse=sort_reverse)
     return sorted_list

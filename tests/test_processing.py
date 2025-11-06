@@ -6,6 +6,7 @@ from src import processing
                                                                            {'id': 939719570, 'state': 'EXECUTED', 'date': '2018-06-30T02:08:58.425572'},
                                                                            {'id': 698729329, 'state': 'PROCESSED', 'date': '2023-12-12T05:48:55.344688'},
                                                                            {'id': 89223248, 'state': 'CANCELED', 'date': '2005-01-12T21:16:25.247425'},
+                                                                           {'id': 41435529, 'state': '', 'date': '2016-11-02T19:31:20.516566'},
                                                                            {'id': 594226727, 'state': 'EXECUTED', 'date': '2018-09-03T23:27:01.533689'},
                                                                            {'id': 615064591, 'state': 'CANCELED', 'date': '2019-10-14T08:21:33.419441'}],
                                                                           [{'id': 41428829, 'state': 'EXECUTED', 'date': '2019-07-03T18:35:29.512364'},
@@ -17,11 +18,21 @@ from src import processing
                                                                            {'id': 939719570, 'state': 'EXECUTED', 'date': '2018-06-30T02:08:58.425572'},
                                                                            {'id': 698729329, 'state': 'PROCESSED', 'date': '2023-12-12T05:48:55.344688'},
                                                                            {'id': 89223248, 'state': 'CANCELED', 'date': '2005-01-12T21:16:25.247425'},
+                                                                           {'id': 41435529, 'state': '', 'date': '2016-11-02T19:31:20.516566'},
                                                                            {'id': 594226727, 'state': 'EXECUTED', 'date': '2018-09-03T23:27:01.533689'},
                                                                            {'id': 615064591, 'state': 'CANCELED', 'date': '2019-10-14T08:21:33.419441'}],
                                                                           [{'id': 89223248, 'state': 'CANCELED', 'date': '2005-01-12T21:16:25.247425'},
                                                                            {'id': 615064591, 'state': 'CANCELED', 'date': '2019-10-14T08:21:33.419441'}],
                                                                           'CANCELED'),
+                                                                         ([{'id': 41428829, 'state': 'EXECUTED', 'date': '2019-07-03T18:35:29.512364'},
+                                                                           {'id': 939719570, 'state': 'EXECUTED', 'date': '2018-06-30T02:08:58.425572'},
+                                                                           {'id': 698729329, 'state': 'PROCESSED', 'date': '2023-12-12T05:48:55.344688'},
+                                                                           {'id': 89223248, 'state': 'CANCELED', 'date': '2005-01-12T21:16:25.247425'},
+                                                                           {'id': 41435529, 'state': '', 'date': '2016-11-02T19:31:20.516566'},
+                                                                           {'id': 594226727, 'state': 'EXECUTED', 'date': '2018-09-03T23:27:01.533689'},
+                                                                           {'id': 615064591, 'state': 'CANCELED', 'date': '2019-10-14T08:21:33.419441'}],
+                                                                          [{'id': 41435529, 'state': '', 'date': '2016-11-02T19:31:20.516566'}],
+                                                                          ''),
                                                                          ([],[],'EXECUTED')])
 def test_filter_by_state(dicts_list, expected_dicts_list, state_value):
     assert processing.filter_by_state(dicts_list, state=state_value) == expected_dicts_list
@@ -124,3 +135,32 @@ def test_sort_by_date(dicts_list, expected_dicts_list, reversion):
 def test_sort_by_date_default_sort_reverse(dicts_list, expected_dicts_list):
     assert processing.sort_by_date(dicts_list) == expected_dicts_list
 
+
+def test_sort_by_date_no_arg(dicts_list_no_arg):
+    with pytest.raises(TypeError):
+        assert processing.sort_by_date(dicts_list_no_arg)
+
+
+def test_sort_by_date_invalid_type(dicts_list_invalid_type):
+    with pytest.raises(TypeError):
+        assert processing.sort_by_date(dicts_list_invalid_type)
+
+
+@pytest.mark.parametrize('dicts_list', [([{'id', 41428829, 'state', 'EXECUTED', 'date', '2019-07-03T18:35:29.364'}]),
+                                        ([['id', 939719570, 'state', 'EXECUTED', 'date', '2018-06-30T02:08:58.425572']]),
+                                        ([('id', 698729329, 'state', 'PROCESSED', 'data', '2023-12-12T05:48:55.344688')]),
+                                        ([{'i_d': 89223248, 'state': 'CANCELED', 'date': '2005-01-12T21:16:25.247425'}]),
+                                        ([{'id': 594226727, 'status': 'EXECUTED', 'date': '2018-09-03T23:27:01.533689'}]),
+                                        ([{'id': 615064591, 'state': 'CANCELED', 'data': '2019-10-14T08:21:33.419441'}]),
+                                        ([{'id': 594356727, 'state': 'EXECUTED', 'date': '2011-01-02T12:57:01'}])])
+def test_sort_by_date_incorrect_data(dicts_list):
+    with pytest.raises(ValueError):
+        processing.sort_by_date(dicts_list)
+
+
+@pytest.mark.parametrize('dicts_list', [([{'id': 594226727, 'state': 'EXECUTED', 'date': '2o18-o9-o3T23:27:o1.533689'}]),
+                                        ([{'id': 615064591, 'state': 'CANCELED', 'date': '2019_10_14T08:21:33.419441'}]),
+                                        ([{'id': 594356727, 'state': 'EXECUTED', 'date': '2011-1-2T12:57:1.345555'}])])
+def test_sort_by_date_incorrect_date_value(dicts_list):
+    with pytest.raises(KeyError):
+        processing.sort_by_date(dicts_list)
