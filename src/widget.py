@@ -51,17 +51,20 @@ def get_date(detailed_log: str) -> str:
 
     if not isinstance(detailed_log, str):
         raise TypeError("Некорректный формат лога")
-    if detailed_log.count("-") != 2 or len(detailed_log) == 0:
+    if len(detailed_log) == 0:
         raise ValueError("Некорректный формат лога")
+
+    symbol_index_dict = {4: '-', 7: '-', 10: 'T', 13: ':', 16: ':', 19: '.'}
+    for i in range(len(detailed_log)):
+        if len(detailed_log) > 20:
+            if not detailed_log[i].isdigit():
+                if detailed_log[i] != symbol_index_dict[i]:
+                    raise KeyError("Некорректный формат лога")
+        else:
+            raise KeyError("Некорректный формат лога")
 
     date_list = detailed_log.split("-")
-    if len(date_list[0]) != 4 or len(date_list[1]) != 2 or len(date_list[2]) < 13:
-        raise ValueError("Некорректный формат лога")
-
     day = date_list[2][:2]
     date_list[2] = day
-    if not "".join(date_list).isdigit() or int(date_list[1]) > 12 or int(date_list[2]) > 31:
-        raise ValueError("Некорректный формат лога")
-
     date = ".".join(date_list[::-1])
     return date

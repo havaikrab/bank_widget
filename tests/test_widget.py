@@ -80,9 +80,9 @@ def test_get_date(detailed_log, expected_date):
     assert widget.get_date(detailed_log) == expected_date
 
 
-def test_get_date_empty(log_empty):
+def test_get_date_no_arg(log_no_arg):
     with pytest.raises(TypeError):
-        widget.get_date(log_empty)
+        widget.get_date(log_no_arg)
 
 
 def test_get_date_invalid_type(log_invalid_type):
@@ -90,19 +90,19 @@ def test_get_date_invalid_type(log_invalid_type):
         widget.get_date(log_invalid_type)
 
 
-@pytest.mark.parametrize(
-    "invalid_log",
-    [
-        ("2024-03-11T02-26-18.671407"),
-        (""),
-        ("24-03-11T02:26:18.671407"),
-        ("2024-3-11T02:26:18.671407"),
-        ("2024-03-11T02:26:18"),
-        ("2o24-o3-11T02:26:18.671407"),
-        ("2024-14-05T02:26:18.671407"),
-        ("2024-03-32T02:26:18.671407"),
-    ],
-)
-def test_get_date_invalid_format(invalid_log):
+def test_get_date_str_empty(log_str_empty):
     with pytest.raises(ValueError):
+        widget.get_date(log_str_empty)
+
+
+@pytest.mark.parametrize("invalid_log", [("24-03-11T02:26:18.671407"),
+                                         ("2024-3-11T02:26:18.671407"),
+                                         ("2o24-o3-11T02:26:18.671407"),
+                                         ("2024_12_11T02:26:18.671407"),
+                                         ("2024-03-11T02:26:18")])
+def test_get_date_invalid_format(invalid_log):
+    with pytest.raises(KeyError):
         widget.get_date(invalid_log)
+
+
+

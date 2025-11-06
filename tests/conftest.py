@@ -87,13 +87,18 @@ def requisites_too_short_number():
 
 
 @pytest.fixture
-def log_empty():
+def log_no_arg():
     return None
 
 
 @pytest.fixture
 def log_invalid_type():
     return {"Day": "12", "Month": "12", "Year": "2012"}
+
+
+@pytest.fixture
+def log_str_empty():
+    return ''
 
 
 @pytest.fixture
