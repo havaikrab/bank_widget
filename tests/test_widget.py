@@ -95,14 +95,16 @@ def test_get_date_str_empty(log_str_empty):
         widget.get_date(log_str_empty)
 
 
-@pytest.mark.parametrize("invalid_log", [("24-03-11T02:26:18.671407"),
-                                         ("2024-3-11T02:26:18.671407"),
-                                         ("2o24-o3-11T02:26:18.671407"),
-                                         ("2024_12_11T02:26:18.671407"),
-                                         ("2024-03-11T02:26:18")])
+@pytest.mark.parametrize(
+    "invalid_log",
+    [
+        ("24-03-11T02:26:18.671407"),
+        ("2024-3-11T02:26:18.671407"),
+        ("2o24-o3-11T02:26:18.671407"),
+        ("2024_12_11T02:26:18.671407"),
+        ("2024-03-11T02:26:18"),
+    ],
+)
 def test_get_date_invalid_format(invalid_log):
     with pytest.raises(KeyError):
         widget.get_date(invalid_log)
-
-
-

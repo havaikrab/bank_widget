@@ -54,7 +54,7 @@ def get_date(detailed_log: str) -> str:
     if len(detailed_log) == 0:
         raise ValueError("Некорректный формат лога")
 
-    symbol_index_dict = {4: '-', 7: '-', 10: 'T', 13: ':', 16: ':', 19: '.'}
+    symbol_index_dict = {4: "-", 7: "-", 10: "T", 13: ":", 16: ":", 19: "."}
     for i in range(len(detailed_log)):
         if len(detailed_log) > 20:
             if not detailed_log[i].isdigit():
