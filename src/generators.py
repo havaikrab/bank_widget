@@ -26,4 +26,4 @@ def transaction_descriptions(transactions: List[dict]) -> Iterator:
 
     for transaction in transactions:
         if isinstance(transaction, dict) and "description" in transaction:
-            yield transaction
+            yield transaction["description"]

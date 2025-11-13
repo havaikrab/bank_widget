@@ -132,7 +132,7 @@ def some_dirty_transactions():
             "to": "Счет 11776614605963066702",
         },
         {
-            "id": 'invalid key "operationAmount"',
+            "id": 'INVALID KEY "operationAmount"',
             "state": "EXECUTED",
             "date": "2019-04-04T23:20:05.206878",
             "OOOperationAmount": {"amount": "79114.93", "currency": {"name": "USD", "code": "USD"}},
@@ -141,7 +141,7 @@ def some_dirty_transactions():
             "to": "Счет 75651667383060284188",
         },
         {
-            "id": 'invalid key "currency"',
+            "id": 'INVALID KEY "currency"',
             "state": "EXECUTED",
             "date": "2019-03-23T01:09:46.296404",
             "operationAmount": {"amount": "43318.34", "CCCurrency": {"name": "руб.", "code": "RUB"}},
@@ -149,7 +149,7 @@ def some_dirty_transactions():
             "to": "Счет 74489636417521191160",
         },
         {
-            "id": 'invalid key "code"',
+            "id": 'INVALID KEY "code"',
             "state": "EXECUTED",
             "operationAmount": {"amount": "56883.54", "currency": {"name": "USD", "CCCode": "USD"}},
             "description": "Перевод с карты на карту",
