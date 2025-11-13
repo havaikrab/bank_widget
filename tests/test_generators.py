@@ -170,3 +170,8 @@ def test_filter_by_currency_dirty(some_dirty_transactions):
 
 def test_filter_by_currency_empty(empty_transactions_list):
     assert list(generators.filter_by_currency(empty_transactions_list, "USD")) == []
+
+
+def test_filter_by_currency_invalid_type(transactions_invalid_type):
+    with pytest.raises(TypeError):
+        assert next(generators.filter_by_currency(transactions_invalid_type, "USD"))
