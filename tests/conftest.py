@@ -171,8 +171,3 @@ def some_dirty_transactions():
 @pytest.fixture
 def empty_transactions_list():
     return []
-
-
-# @pytest.fixture
-# def transactions_invalid_type():
-#    return 123
