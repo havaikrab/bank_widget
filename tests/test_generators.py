@@ -272,7 +272,8 @@ def test_filter_by_currency_invalid_type(transactions_invalid_type):
                 },
             ],
             ["Перевод", "Перевод с карты на карту"],
-        ), ([],[])
+        ),
+        ([], []),
     ],
 )
 def test_transaction_descriptions(transactions_list, expected):
@@ -283,3 +284,59 @@ def test_transaction_descriptions(transactions_list, expected):
 def test_transaction_descriptions_invalid_type(transactions_invalid_type):
     with pytest.raises(TypeError):
         assert next(generators.transaction_descriptions(transactions_invalid_type))
+
+
+@pytest.mark.parametrize(
+    "start_range, end_range, sequence, expected",
+    [
+        (
+            1,
+            5,
+            range(0, 5),
+            [
+                "0000 0000 0000 0001",
+                "0000 0000 0000 0002",
+                "0000 0000 0000 0003",
+                "0000 0000 0000 0004",
+                "0000 0000 0000 0005",
+            ],
+        ),
+        (
+            int("9" * 14 + "77"),
+            int("9" * 16),
+            range(11, 2, -2),
+            [
+                "9999 9999 9999 9988",
+                "9999 9999 9999 9986",
+                "9999 9999 9999 9984",
+                "9999 9999 9999 9982",
+                "9999 9999 9999 9980",
+            ],
+        ),
+        (
+            int("9" * 15 + "5"),
+            int("9" * 16),
+            range(5),
+            [
+                "9999 9999 9999 9995",
+                "9999 9999 9999 9996",
+                "9999 9999 9999 9997",
+                "9999 9999 9999 9998",
+                "9999 9999 9999 9999",
+            ],
+        ),
+        (
+            int("5" * 14 + "00"),
+            int("5" * 16),
+            [3, 22, 16, 0],
+            ["5555 5555 5555 5503", "5555 5555 5555 5522", "5555 5555 5555 5516", "5555 5555 5555 5500"],
+        ),
+        (int("4" * 16), int("4" * 16), {0}, ["4444 4444 4444 4444"]),
+    ],
+)
+def test_card_number_generator(start_range, end_range, expected, sequence):
+    expected_list = []
+    card_numbers = list(generators.card_number_generator(start_range, end_range))
+    for i in sequence:
+        expected_list.append(card_numbers[i])
+    assert expected_list == expected
