@@ -29,17 +29,17 @@ def transaction_descriptions(transactions: List[dict]) -> Iterator:
             yield transaction["description"]
 
 
-def card_number_generator(start: int, stop: int) -> str:
-    '''Возвращает итератор с номерами карт в указанном диапазоне'''
+def card_number_generator(start: int, stop: int) -> Iterator:
+    """Возвращает итератор с номерами карт в указанном диапазоне"""
 
     if not isinstance(start, int) or not isinstance(stop, int):
         raise TypeError("Некорректный формат введенного диапазона")
-    if start < 1 or stop > int('9' * 16) or start > stop:
+    if start < 1 or stop > int("9" * 16) or start > stop:
         raise ValueError("Некорректный формат введенного диапазона")
 
     for num in range(start, (stop + 1)):
         num_str = str(num)
         while len(num_str) < 16:
-            num_str = '0' + num_str
-        card_number = num_str[:4] + ' ' + num_str[4:8] + ' ' + num_str[8:12] + ' ' + num_str[12:]
+            num_str = "0" + num_str
+        card_number = num_str[:4] + " " + num_str[4:8] + " " + num_str[8:12] + " " + num_str[12:]
         yield card_number

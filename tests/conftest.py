@@ -188,7 +188,7 @@ def transactions_invalid_type():
 
 @pytest.fixture
 def card_number_invalid_start_type():
-    return '10'
+    return "10"
 
 
 @pytest.fixture

@@ -352,7 +352,7 @@ def test_card_number_generator_invalid_stop_type(card_number_correct_type, card_
         assert next(generators.card_number_generator(card_number_correct_type, card_number_invalid_stop_type))
 
 
-@pytest.mark.parametrize("start_range, end_range", [(0, 10), (10 ** 15, 10 ** 17), (200, 100)])
+@pytest.mark.parametrize("start_range, end_range", [(0, 10), (10**15, 10**17), (200, 100)])
 def test_card_number_generator_invalid_values(start_range, end_range):
     with pytest.raises(ValueError):
         assert next(generators.card_number_generator(start_range, end_range))
