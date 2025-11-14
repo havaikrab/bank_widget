@@ -340,3 +340,19 @@ def test_card_number_generator(start_range, end_range, expected, sequence):
     for i in sequence:
         expected_list.append(card_numbers[i])
     assert expected_list == expected
+
+
+def test_card_number_generator_invalid_start_type(card_number_invalid_start_type, card_number_correct_type):
+    with pytest.raises(TypeError):
+        assert next(generators.card_number_generator(card_number_invalid_start_type, card_number_correct_type))
+
+
+def test_card_number_generator_invalid_stop_type(card_number_correct_type, card_number_invalid_stop_type):
+    with pytest.raises(TypeError):
+        assert next(generators.card_number_generator(card_number_correct_type, card_number_invalid_stop_type))
+
+
+@pytest.mark.parametrize("start_range, end_range", [(0, 10), (10 ** 15, 10 ** 17), (200, 100)])
+def test_card_number_generator_invalid_values(start_range, end_range):
+    with pytest.raises(ValueError):
+        assert next(generators.card_number_generator(start_range, end_range))

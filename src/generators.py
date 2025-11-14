@@ -34,7 +34,7 @@ def card_number_generator(start: int, stop: int) -> str:
 
     if not isinstance(start, int) or not isinstance(stop, int):
         raise TypeError("Некорректный формат введенного диапазона")
-    if not 1 <= start <= int('9' * 16) or not 1 <= stop <= int('9' * 16) or start > stop:
+    if start < 1 or stop > int('9' * 16) or start > stop:
         raise ValueError("Некорректный формат введенного диапазона")
 
     for num in range(start, (stop + 1)):

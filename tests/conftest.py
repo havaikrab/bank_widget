@@ -184,3 +184,18 @@ def transactions_invalid_type():
         "from": "Счет 44812258784861134719",
         "to": "Счет 74489636417521191160",
     }
+
+
+@pytest.fixture
+def card_number_invalid_start_type():
+    return '10'
+
+
+@pytest.fixture
+def card_number_correct_type():
+    return 30
+
+
+@pytest.fixture
+def card_number_invalid_stop_type():
+    return [99]
