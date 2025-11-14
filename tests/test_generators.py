@@ -177,15 +177,6 @@ def test_filter_by_currency_invalid_type(transactions_invalid_type):
         assert next(generators.filter_by_currency(transactions_invalid_type, "USD"))
 
 
-def test_transaction_descriptions_empty(empty_transactions_list):
-    assert list(generators.transaction_descriptions(empty_transactions_list)) == []
-
-
-def test_transaction_descriptions_invalid_type(transactions_invalid_type):
-    with pytest.raises(TypeError):
-        assert next(generators.transaction_descriptions(transactions_invalid_type))
-
-
 @pytest.mark.parametrize(
     "transactions_list, expected",
     [
@@ -281,9 +272,14 @@ def test_transaction_descriptions_invalid_type(transactions_invalid_type):
                 },
             ],
             ["Перевод", "Перевод с карты на карту"],
-        ),
+        ), ([],[])
     ],
 )
 def test_transaction_descriptions(transactions_list, expected):
     descriptions = generators.transaction_descriptions(transactions_list)
     assert list(descriptions) == expected
+
+
+def test_transaction_descriptions_invalid_type(transactions_invalid_type):
+    with pytest.raises(TypeError):
+        assert next(generators.transaction_descriptions(transactions_invalid_type))
