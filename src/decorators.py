@@ -17,7 +17,7 @@ def log(filename: str =None) -> Callable:
                 log_info = f'Вызываемая функция: {func.__name__}\nВремя вызова: {start_time}\nРезультат: {result}\nВремя завершения вызова: {end_time}\n\n'
                 return result
             except Exception as some_ex:
-                log_info = f'Вызываемая функция: {func.__name__}\nВремя вызова: {start_time}\nРезультат: Работа преждевременно завершена с ошибкой: {type(some_ex).__name__} "{str(some_ex)}"\n\n'
+                log_info = f'Вызываемая функция: {func.__name__}\nВремя вызова: {start_time}\nРезультат: Работа преждевременно завершена с ошибкой: {type(some_ex).__name__} "{str(some_ex)}"\nПри входных параметрах:\nПозиционных: {args}\nИменованных: {kwargs}\n\n'
             finally:
                 if filename:
                     with open(filename, 'a', encoding="utf-8") as file:
