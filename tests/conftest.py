@@ -23,7 +23,7 @@ def card_number_invalid_type():
 
 @pytest.fixture
 def card_number_incorrect():
-    return '1234567890oo'
+    return "1234567890oo"
 
 
 @pytest.fixture
@@ -48,7 +48,7 @@ def account_invalid_type():
 
 @pytest.fixture
 def account_incorrect():
-    return '1234567890oo'
+    return "1234567890oo"
 
 
 @pytest.fixture
