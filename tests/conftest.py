@@ -17,8 +17,13 @@ def card_number_empty():
 
 
 @pytest.fixture
-def card_number_invalid():
+def card_number_invalid_type():
     return 1234567890
+
+
+@pytest.fixture
+def card_number_incorrect():
+    return '1234567890oo'
 
 
 @pytest.fixture
@@ -37,8 +42,13 @@ def account_empty():
 
 
 @pytest.fixture
-def account_invalid():
+def account_invalid_type():
     return 1234567890
+
+
+@pytest.fixture
+def account_incorrect():
+    return '1234567890oo'
 
 
 @pytest.fixture
