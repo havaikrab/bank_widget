@@ -3,6 +3,10 @@ def get_mask_card_number(card_number: str) -> str:
 
     if not isinstance(card_number, str):
         raise TypeError("Некорректный номер карты")
+    for i in card_number:
+        if not i.isdigit():
+            raise TypeError("Некорректный номер карты")
+
     if 12 < len(card_number) < 20:
         first_slice = list(card_number)[:6]
         first_slice.insert(4, " ")
@@ -19,6 +23,10 @@ def get_mask_account(account: str) -> str:
 
     if not isinstance(account, str):
         raise TypeError("Некорректный номер счета")
+    for i in account:
+        if not i.isdigit():
+            raise TypeError("Некорректный номер счета")
+
     if 14 < len(account) < 35:
         end_str = account[-4:]
         masked_account = "**" + end_str

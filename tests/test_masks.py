@@ -30,9 +30,14 @@ def test_get_mask_card_no_number(card_number_empty):
         masks.get_mask_card_number(card_number_empty)
 
 
-def test_get_mask_card_number_invalid(card_number_invalid):
+def test_get_mask_card_number_invalid_type(card_number_invalid_type):
     with pytest.raises(TypeError):
-        masks.get_mask_card_number(card_number_invalid)
+        masks.get_mask_card_number(card_number_invalid_type)
+
+
+def test_get_mask_card_number_incorrect(card_number_incorrect):
+    with pytest.raises(TypeError):
+        masks.get_mask_card_number(card_number_incorrect)
 
 
 @pytest.mark.parametrize(
@@ -62,6 +67,11 @@ def test_get_mask_account_empty(account_empty):
         masks.get_mask_account(account_empty)
 
 
-def test_get_mask_account_invalid(account_invalid):
+def test_get_mask_account_invalid_type(account_invalid_type):
     with pytest.raises(TypeError):
-        masks.get_mask_account(account_invalid)
+        masks.get_mask_account(account_invalid_type)
+
+
+def test_get_mask_account_incorrect(account_incorrect):
+    with pytest.raises(TypeError):
+        masks.get_mask_account(account_incorrect)
