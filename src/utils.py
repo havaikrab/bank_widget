@@ -1,6 +1,8 @@
-from typing import List, Dict
 import json
+from typing import Dict, List
+
 from src import external_api
+
 
 def get_transactions(path_to_file: str) -> List[Dict]:
     """Возвращает список словарей-транзакций из указанного файла"""
@@ -8,7 +10,7 @@ def get_transactions(path_to_file: str) -> List[Dict]:
     try:
         with open(path_to_file, "r", encoding="utf-8") as data:
             transactions_list = json.load(data)
-            if type(transactions_list) != list:
+            if not isinstance(transactions_list, list):
                 return []
             else:
                 return transactions_list
@@ -20,7 +22,7 @@ def get_amount_rubles(transaction: dict) -> float:
     """Возвращает сумму транзакции в рублевом эквиваленте"""
 
     if (
-        type(transaction) == dict
+        isinstance(transaction, dict)
         and "date" in transaction
         and "operationAmount" in transaction
         and "amount" in transaction["operationAmount"]
@@ -48,5 +50,8 @@ def get_amount_rubles(transaction: dict) -> float:
                     return amount_rubles
                 else:
                     print("Неизвестный код валюты транзакции")
+                    return 0.0
+            else:
+                return 0.0
     else:
         raise ValueError("Некорректный формат данных")

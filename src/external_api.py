@@ -1,6 +1,7 @@
 import os
-from dotenv import load_dotenv
+
 import requests
+from dotenv import load_dotenv
 
 
 def get_currency_rate_by_date(currency_code: str, date: str) -> dict:

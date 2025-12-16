@@ -214,12 +214,8 @@ def card_number_invalid_stop_type():
 @pytest.fixture
 def transaction_invalid_date():
     return {
-    "id": 895315941,
-    "state": "EXECUTED",
-    "date": "2018*08*19T04:27:37.904916",
-    "operationAmount": {
-      "amount": "56883.54",
-      "currency": {
-        "name": "USD",
-        "code": "USD"
-      }}}
+        "id": 895315941,
+        "state": "EXECUTED",
+        "date": "2018*08*19T04:27:37.904916",
+        "operationAmount": {"amount": "56883.54", "currency": {"name": "USD", "code": "USD"}},
+    }

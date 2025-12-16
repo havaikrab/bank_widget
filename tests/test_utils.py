@@ -1,7 +1,9 @@
+from unittest.mock import mock_open, patch
+
 import pytest
+
 from src import utils
-from src import external_api
-from unittest.mock import patch, mock_open
+
 
 mock_data = mock_open(read_data='[{"id": 123, "currency": {"code": "RUB", "amount": 1000}}]')
 
@@ -140,17 +142,56 @@ def test_get_amount_rubles_external_request(mocked_rate):
         )
         == 12345.0
     )
-    mocked_rate.assert_called_once_with('USD', '2019-07-12')
+    mocked_rate.assert_called_once_with("USD", "2019-07-12")
 
 
 @patch("src.external_api.get_currency_rate_by_date")
-def test_get_amount_rubles_unknown_currency_code(mocked_request, capsys):
-    mocked_request.return_value = {"status": True, "rate": None}
-    utils.get_amount_rubles({
+def test_get_amount_rubles_unknown_currency_code(mocked_rate, capsys):
+    mocked_rate.return_value = {"status": True, "rate": None}
+    utils.get_amount_rubles(
+        {
+            "id": 522357576,
+            "state": "EXECUTED",
+            "date": "2019-07-12T20:41:47.882230",
+            "operationAmount": {"amount": "123.45", "currency": {"name": "Евро", "code": "Euro"}},
+        }
+    )
+    captured = capsys.readouterr()
+    assert captured.out == "Неизвестный код валюты транзакции\n"
+    assert (
+        utils.get_amount_rubles(
+            {
                 "id": 522357576,
                 "state": "EXECUTED",
                 "date": "2019-07-12T20:41:47.882230",
-                "operationAmount": {"amount": "123.45", "currency": {"name": "Евро", "code": "Euro"}}})
-    captured = capsys.readouterr()
-    assert captured.out == 'Неизвестный код валюты транзакции\n'
-    mocked_request.assert_called_once_with('Euro', '2019-07-12')
+                "operationAmount": {"amount": "123.45", "currency": {"name": "Евро", "code": "Euro"}},
+            }
+        )
+        == 0.0
+    )
+    mocked_rate.assert_called_with("Euro", "2019-07-12")
+
+
+@patch("src.external_api.get_currency_rate_by_date")
+def test_get_amount_rubles_bad_rate_status(mocked_rate, capsys):
+    mocked_rate.return_value = {"status": False, "rate": None}
+    utils.get_amount_rubles(
+        {
+            "id": 522357576,
+            "state": "EXECUTED",
+            "date": "2019-07-12T20:41:47.882230",
+            "operationAmount": {"amount": "123.45", "currency": {"name": "Евро", "code": "Euro"}},
+        }
+    )
+    assert (
+        utils.get_amount_rubles(
+            {
+                "id": 522357576,
+                "state": "EXECUTED",
+                "date": "2019-07-12T20:41:47.882230",
+                "operationAmount": {"amount": "123.45", "currency": {"name": "Евро", "code": "Euro"}},
+            }
+        )
+        == 0.0
+    )
+    mocked_rate.assert_called_with("Euro", "2019-07-12")

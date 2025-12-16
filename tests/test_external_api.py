@@ -1,7 +1,9 @@
-from src import external_api
-from unittest.mock import patch
 import os
+from unittest.mock import patch
+
 from dotenv import load_dotenv
+
+from src import external_api
 
 
 @patch("requests.get")
