@@ -1,6 +1,8 @@
 from unittest.mock import mock_open, patch
-from src import data_readers
+
 import pandas as pd
+
+from src import data_readers
 
 
 mock_empty_data = mock_open(read_data="")
