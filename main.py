@@ -1,5 +1,23 @@
-from src import utils, data_readers, processing
-import json
+from src import utils, data_readers, processing, searchers, widget
+from collections import Counter
+
+
+def get_output_form(transaction: dict) -> dict:
+    result_dict = dict()
+    if transaction.get("operationAmount").get("amount"):
+        result_dict["head"] = str(widget.get_date(transaction.get("date"))) + " " + transaction.get("description")
+        sender = ""
+        if transaction.get("from"):
+            sender = str(widget.mask_account_card(transaction.get("from"))) + " -> "
+        result_dict["from_to"] = sender + str(widget.mask_account_card(transaction.get("to")))
+        result_dict["amount"] = (
+            "Сумма: "
+            + str(transaction.get("operationAmount").get("amount"))
+            + " "
+            + str(transaction.get("operationAmount").get("currency").get("name"))
+        )
+    return result_dict
+
 
 data_source = {
     "1": ["JSON", "data/operations.json", utils.get_transactions],
@@ -30,92 +48,89 @@ if __name__ == "__main__":
     )
     while True:
         called_state = input().upper()
-        if called_state == 'PENDING' or called_state == 'CANCELED' or called_state == 'EXECUTED':
+        if called_state == "PENDING" or called_state == "CANCELED" or called_state == "EXECUTED":
             break
         print("Пожалуйста, введите один из предложенных вариантов статуса операций: PENDING, CANCELED, EXECUTED")
     filtered_by_state_data = processing.filter_by_state(transactions, state=called_state)
 
-    print('Отсортировать операции по дате? Да / Нет')
+    print("Отсортировать операции по дате? Да / Нет")
     while True:
         sort_by_date = input().lower()
-        if sort_by_date == 'да':
-            print('''Укажите, в каком порядке нужно отсортировать операции?
+        if sort_by_date == "да":
+            print(
+                """Укажите, в каком порядке нужно отсортировать операции?
 По возрастанию / По убыванию
 По возрастанию - от старых операций к новым.
-По убыванию - от новых операций к старым.''')
+По убыванию - от новых операций к старым."""
+            )
 
             while True:
                 sort_direction = input().lower()
-                if 'возрастан' in sort_direction and 'убыван' not in sort_direction:
+                if "возрастан" in sort_direction and "убыван" not in sort_direction:
                     date_reverse = False
                     break
 
-                elif 'убыван' in sort_direction and 'возрастан' not in sort_direction:
+                elif "убыван" in sort_direction and "возрастан" not in sort_direction:
                     date_reverse = True
                     break
 
-                print('Извините, ваш ответ не ясен, пожалуйста, введите: ПО ВОЗРАСТАНИЮ или ПО УБЫВАНИЮ')
+                print("Извините, ваш ответ не ясен, пожалуйста, введите: ПО ВОЗРАСТАНИЮ или ПО УБЫВАНИЮ")
             sorted_by_date_data = processing.sort_by_date(filtered_by_state_data, sort_reverse=date_reverse)
             break
 
-        elif sort_by_date == 'нет':
+        elif sort_by_date == "нет":
             sorted_by_date_data = filtered_by_state_data
             break
 
-        print('Извините, ваш ответ не ясен, пожалуйста, введите: ДА или НЕТ')
+        print("Извините, ваш ответ не ясен, пожалуйста, введите: ДА или НЕТ")
 
-    print('Желаете ли вы увидеть только рублевые операции? Да / Нет')
+    print("Желаете ли вы увидеть только рублевые операции? Да / Нет")
     while True:
         rubles_transactions = input().lower()
-        if rubles_transactions == 'нет':
-            print('''Для операций с валютой, отличной от рубля,
-необходима ли информация о сумме транзакций в рублевом эквиваленте на момент совершения операции? Да / Нет''')
-            while True:
-                convertion = input().lower()
-                if convertion == 'нет':
-                    sorted_by_currency_data = sorted_by_date_data
-                    break
-
-                elif convertion == 'да':
-                    sorted_by_currency_data = []
-                    for transaction in sorted_by_date_data:
-                        if transaction.get('operationAmount').get('currency').get('code') != 'RUB':
-                            transaction.get('operationAmount')['convertedToRublesAmount'] = utils.get_amount_rubles(transaction)
-                            sorted_by_currency_data.append(transaction)
-                        else:
-                            sorted_by_currency_data.append(transaction)
-                    break
-
-                print('Извините, ваш ответ не ясен, пожалуйста, введите: ДА или НЕТ')
-
-
-        elif rubles_transactions == 'да':
-            sorted_by_currency_data = [transaction for transaction in sorted_by_date_data if transaction.get('operationAmount').get('currency').get('code') == 'RUB']
+        if rubles_transactions == "нет":
+            sorted_by_currency_data = sorted_by_date_data
             break
 
-        print('Извините, ваш ответ не ясен, пожалуйста, введите: ДА или НЕТ')
+        elif rubles_transactions == "да":
+            sorted_by_currency_data = [
+                transaction
+                for transaction in sorted_by_date_data
+                if transaction.get("operationAmount").get("currency").get("code") == "RUB"
+            ]
+            break
 
+        print("Извините, ваш ответ не ясен, пожалуйста, введите: ДА или НЕТ")
 
+    print("Желаете ли вы отфильтровать операции по определенному слову в описании? Да / Нет")
+    counted_descriptions = None
+    while True:
+        key_words_filter = input().lower()
+        if key_words_filter == "нет":
+            sorted_by_description_data = sorted_by_currency_data
+            result_data = [get_output_form(transaction) for transaction in sorted_by_description_data]
+            break
 
+        elif key_words_filter == "да":
+            print("Пожалуйста, введите ключевые слова для поиска соответствующих операций")
+            key_words = input()
+            sorted_by_description_data = searchers.find_description(sorted_by_currency_data, key_words)
+            result_data = [get_output_form(transaction) for transaction in sorted_by_description_data]
+            descriptions_list = [transaction.get("description") for transaction in sorted_by_description_data]
+            counted_descriptions = dict(Counter(descriptions_list))
+            break
 
+        print("Извините, ваш ответ не ясен, пожалуйста, введите: ДА или НЕТ")
 
-
-
-
-
-
-    print(json.dumps(sorted_by_currency_data, indent=4, ensure_ascii=False))
-    print(len(sorted_by_currency_data))
-
-# json - pending - 0
-# csv - pending - 146  9
-# xl - pending - 146   9
-
-# json - cancel - 15   9
-# csv - cancel - 158   11
-# xl - cancel - 158    11
-
-
-# json - executed - 85 40
-# csv - executed - 695 34
-# xl - executed - 695
+    result_count = len(result_data)
+    if result_count == 0:
+        print("Операций, подходящих под описание не найдено")
+    else:
+        print("Пожалуйста, вот список интересующих вас операций")
+        print(f"Всего операций {result_count}")
+        if counted_descriptions:
+            for k, v in counted_descriptions.items():
+                print(f"{k}: {v}")
+        for transaction in result_data:
+            print("")
+            for v in transaction.values():
+                print(v)

@@ -7,9 +7,10 @@ def find_description(transactions_list: list, text: str) -> list:
 
     pattern = re.compile(r"\b\w+\b")
     key_words = re.findall(pattern, text)
+    key_words_roots = [word[:-2] for word in key_words if len(word) > 2]
     required_list = []
     for transaction in transactions_list:
-        for word in key_words:
+        for word in key_words_roots:
             if word.lower() in transaction.get("description", "").lower():
                 required_list.append(transaction)
                 break

@@ -47,21 +47,20 @@ def mask_account_card(requisites: str) -> str:
 
 
 def get_date(detailed_log: str) -> str:
-    """Возвращает дату лога"""
+    """Возвращает строку 'год.месяц.день' из строки 'год-месяц-деньTчасы:минуты:секунды'"""
 
     if not isinstance(detailed_log, str):
-        raise TypeError("Некорректный формат лога")
+        raise TypeError("Некорректный формат даты")
     if len(detailed_log) == 0:
-        raise ValueError("Некорректный формат лога")
+        raise ValueError("Некорректный формат даты")
 
-    symbol_index_dict = {4: "-", 7: "-", 10: "T", 13: ":", 16: ":", 19: "."}
-    for i in range(len(detailed_log)):
-        if len(detailed_log) > 20:
-            if not detailed_log[i].isdigit():
-                if detailed_log[i] != symbol_index_dict[i]:
-                    raise KeyError("Некорректный формат лога")
-        else:
-            raise KeyError("Некорректный формат лога")
+    symbol_index_dict = {4: "-", 7: "-", 10: "T", 13: ":", 16: ":"}
+    for i in range(19):
+        if not detailed_log[i].isdigit():
+            if detailed_log[i] != symbol_index_dict.get(i):
+                print('"Некорректный формат даты"')
+                return ''
+
 
     date_list = detailed_log.split("-")
     day = date_list[2][:2]

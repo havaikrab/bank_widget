@@ -20,7 +20,7 @@ mock_invalid_data = mock_open(read_data='{"id": 123, "currency": {"code": "RUB",
 @patch("builtins.open", mock_invalid_data)
 def test_get_transactions_invalid_data():
     assert utils.get_transactions("data/operations.json") == []
-    mock_data.assert_called_once_with("data/operations.json", "r", encoding="utf-8")
+    mock_invalid_data.assert_called_once_with("data/operations.json", "r", encoding="utf-8")
 
 
 def test_get_transactions_no_datafile():
@@ -64,7 +64,7 @@ def test_get_amount_rubles(transaction_dict, expected_value):
 
 
 @pytest.mark.parametrize(
-    "transaction_dict",
+    "transaction_dict, expected",
     [
         (
             [
@@ -74,7 +74,7 @@ def test_get_amount_rubles(transaction_dict, expected_value):
                     "date": "2019-08-26T10:50:58.294041",
                     "operationAmount": {"amount": "31957.58", "currency": {"name": "руб.", "code": "RUB"}},
                 }
-            ]
+            ], 0.0
         ),
         (
             {
@@ -82,7 +82,7 @@ def test_get_amount_rubles(transaction_dict, expected_value):
                 "state": "EXECUTED",
                 "DATE": "2018-03-23T10:45:06.972075",
                 "operationAmount": {"amount": "48223.05", "currency": {"name": "руб.", "code": "RUB"}},
-            }
+            }, 0.0
         ),
         (
             {
@@ -90,7 +90,7 @@ def test_get_amount_rubles(transaction_dict, expected_value):
                 "state": "EXECUTED",
                 "date": "2019-03-23T01:09:46.296404",
                 "OPERATIONAMOUNT": {"amount": "43318.34", "currency": {"name": "руб.", "code": "RUB"}},
-            }
+            }, 0.0
         ),
         (
             {
@@ -98,7 +98,7 @@ def test_get_amount_rubles(transaction_dict, expected_value):
                 "state": "EXECUTED",
                 "date": "2019-04-04T23:20:05.206878",
                 "operationAmount": {"AMOUNT": "79114.93", "currency": {"name": "USD", "code": "USD"}},
-            }
+            }, 0.0
         ),
         (
             {
@@ -106,7 +106,7 @@ def test_get_amount_rubles(transaction_dict, expected_value):
                 "state": "EXECUTED",
                 "date": "2018-12-20T16:43:26.929246",
                 "operationAmount": {"amount": "70946.18", "CURRENCY": {"name": "USD", "code": "USD"}},
-            }
+            }, 0.0
         ),
         (
             {
@@ -114,13 +114,12 @@ def test_get_amount_rubles(transaction_dict, expected_value):
                 "state": "EXECUTED",
                 "date": "2019-07-12T20:41:47.882230",
                 "operationAmount": {"amount": "51463.70", "currency": {"name": "USD", "CODE": "USD"}},
-            }
+            }, 0.0
         ),
     ],
 )
-def test_get_amount_rubles_invalid_keys(transaction_dict):
-    with pytest.raises(ValueError):
-        utils.get_amount_rubles(transaction_dict)
+def test_get_amount_rubles_invalid_keys(transaction_dict, expected):
+    assert utils.get_amount_rubles(transaction_dict) == expected
 
 
 def test_get_amount_rubles_invalid_date(transaction_invalid_date):
