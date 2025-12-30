@@ -1,37 +1,26 @@
-from src import utils, data_readers, processing, searchers, widget
+import os
 from collections import Counter
 
-
-def get_output_form(transaction: dict) -> dict:
-    result_dict = dict()
-    if transaction.get("operationAmount").get("amount"):
-        result_dict["head"] = str(widget.get_date(transaction.get("date"))) + " " + transaction.get("description")
-        sender = ""
-        if transaction.get("from"):
-            sender = str(widget.mask_account_card(transaction.get("from"))) + " -> "
-        result_dict["from_to"] = sender + str(widget.mask_account_card(transaction.get("to")))
-        result_dict["amount"] = (
-            "Сумма: "
-            + str(transaction.get("operationAmount").get("amount"))
-            + " "
-            + str(transaction.get("operationAmount").get("currency").get("name"))
-        )
-    return result_dict
+from src import data_readers, processing, searchers, utils, widget
 
 
+BASE_DIR = os.path.dirname(__file__)
 data_source = {
-    "1": ["JSON", "data/operations.json", utils.get_transactions],
-    "2": ["CSV", "data/transactions.csv", data_readers.csv_data_reader],
-    "3": ["XLSX", "data/transactions_excel.xlsx", data_readers.xlsx_data_reader],
+    "1": ["JSON", BASE_DIR + "/data/operations.json", utils.get_transactions],
+    "2": ["CSV", BASE_DIR + "/data/transactions.csv", data_readers.csv_data_reader],
+    "3": ["XLSX", BASE_DIR + "/data/transactions_excel.xlsx", data_readers.xlsx_data_reader],
 }
 
-if __name__ == "__main__":
+
+def main():
+    """Возвращает итоговый список операций из выбранного файла, учитывая указанные фильтры"""
+
     print(
         """Привет! Добро пожаловать в программу работы с банковскими транзакциями.                                                                                     
-    Выберите необходимый пункт меню:
-    1. Получить информацию о транзакциях из JSON-файла.
-    2. Получить информацию о транзакциях из CSV-файла.
-    3. Получить информацию о транзакциях из XLSX-файла."""
+Выберите необходимый пункт меню:
+1. Получить информацию о транзакциях из JSON-файла.
+2. Получить информацию о транзакциях из CSV-файла.
+3. Получить информацию о транзакциях из XLSX-файла."""
     )
 
     called_data = input()
@@ -44,14 +33,14 @@ if __name__ == "__main__":
 
     print(
         """Введите статус операций, по которому необходимо выполнить фильтрацию.
-    Доступные для фильтровки статусы: PENDING, CANCELED, EXECUTED"""
+Доступные для фильтровки статусы: PENDING, CANCELED, EXECUTED"""
     )
     while True:
         called_state = input().upper()
         if called_state == "PENDING" or called_state == "CANCELED" or called_state == "EXECUTED":
             break
         print("Пожалуйста, введите один из предложенных вариантов статуса операций: PENDING, CANCELED, EXECUTED")
-    filtered_by_state_data = processing.filter_by_state(transactions, state=called_state)
+    transactions = processing.filter_by_state(transactions, state=called_state)
 
     print("Отсортировать операции по дате? Да / Нет")
     while True:
@@ -75,11 +64,10 @@ if __name__ == "__main__":
                     break
 
                 print("Извините, ваш ответ не ясен, пожалуйста, введите: ПО ВОЗРАСТАНИЮ или ПО УБЫВАНИЮ")
-            sorted_by_date_data = processing.sort_by_date(filtered_by_state_data, sort_reverse=date_reverse)
+            transactions = processing.sort_by_date(transactions, sort_reverse=date_reverse)
             break
 
         elif sort_by_date == "нет":
-            sorted_by_date_data = filtered_by_state_data
             break
 
         print("Извините, ваш ответ не ясен, пожалуйста, введите: ДА или НЕТ")
@@ -88,15 +76,15 @@ if __name__ == "__main__":
     while True:
         rubles_transactions = input().lower()
         if rubles_transactions == "нет":
-            sorted_by_currency_data = sorted_by_date_data
             break
 
         elif rubles_transactions == "да":
             sorted_by_currency_data = [
                 transaction
-                for transaction in sorted_by_date_data
-                if transaction.get("operationAmount").get("currency").get("code") == "RUB"
+                for transaction in transactions
+                if transaction.get("operationAmount", {}).get("currency", {}).get("code") == "RUB"
             ]
+            transactions = sorted_by_currency_data
             break
 
         print("Извините, ваш ответ не ясен, пожалуйста, введите: ДА или НЕТ")
@@ -106,20 +94,37 @@ if __name__ == "__main__":
     while True:
         key_words_filter = input().lower()
         if key_words_filter == "нет":
-            sorted_by_description_data = sorted_by_currency_data
-            result_data = [get_output_form(transaction) for transaction in sorted_by_description_data]
             break
 
         elif key_words_filter == "да":
             print("Пожалуйста, введите ключевые слова для поиска соответствующих операций")
             key_words = input()
-            sorted_by_description_data = searchers.find_description(sorted_by_currency_data, key_words)
-            result_data = [get_output_form(transaction) for transaction in sorted_by_description_data]
-            descriptions_list = [transaction.get("description") for transaction in sorted_by_description_data]
+            sorted_by_description_data = searchers.find_description(transactions, key_words)
+            transactions = sorted_by_description_data
+            descriptions_list = [transaction.get("description") for transaction in transactions]
             counted_descriptions = dict(Counter(descriptions_list))
             break
 
         print("Извините, ваш ответ не ясен, пожалуйста, введите: ДА или НЕТ")
+
+    result_data = []
+    for transaction in transactions:
+        result_dict = dict()
+        if transaction.get("operationAmount", {}).get("amount"):
+            result_dict["head"] = (
+                str(widget.get_date(transaction.get("date", ""))) + " " + transaction.get("description", "")
+            )
+            sender = ""
+            if transaction.get("from") and str(transaction.get("from")) != "nan":
+                sender = str(widget.mask_account_card(transaction.get("from"))) + " -> "
+            result_dict["from_to"] = sender + str(widget.mask_account_card(transaction.get("to", "")))
+            result_dict["amount"] = (
+                "Сумма: "
+                + str(transaction.get("operationAmount").get("amount"))
+                + " "
+                + str(transaction.get("operationAmount").get("currency", {}).get("name", ""))
+            )
+            result_data.append(result_dict)
 
     result_count = len(result_data)
     if result_count == 0:
@@ -134,3 +139,7 @@ if __name__ == "__main__":
             print("")
             for v in transaction.values():
                 print(v)
+
+
+if __name__ == "__main__":
+    main()

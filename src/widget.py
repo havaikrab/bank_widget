@@ -59,8 +59,7 @@ def get_date(detailed_log: str) -> str:
         if not detailed_log[i].isdigit():
             if detailed_log[i] != symbol_index_dict.get(i):
                 print('"Некорректный формат даты"')
-                return ''
-
+                return ""
 
     date_list = detailed_log.split("-")
     day = date_list[2][:2]

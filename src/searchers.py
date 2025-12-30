@@ -18,7 +18,8 @@ def find_description(transactions_list: list, text: str) -> list:
 
 
 def aggregate_by_description(transactions_list: list, requirements_list: list):
-    """Возвращает словарь, содержащий названия категорий транзакций с количеством вхождений соответствующей категории в список словарей-транзакций"""
+    """Возвращает словарь, содержащий названия категорий транзакций
+    с количеством вхождений соответствующей категории в список словарей-транзакций"""
 
     descriptions = (
         transaction.get("description")

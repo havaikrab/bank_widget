@@ -105,4 +105,4 @@ def test_get_date_str_empty(log_str_empty):
     ],
 )
 def test_get_date_invalid_format(invalid_log):
-    assert widget.get_date(invalid_log) == ''
+    assert widget.get_date(invalid_log) == ""

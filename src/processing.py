@@ -11,7 +11,6 @@ def filter_by_state(dicts_list: list[dict], state: str = "EXECUTED") -> list:
         if not isinstance(d, Dict):
             raise ValueError("Некорректный формат данных")
 
-
     filtered_list = []
     for d in dicts_list:
         if d.get("state") == state:
@@ -33,7 +32,7 @@ def sort_by_date(dicts_list: list, sort_reverse: bool = True) -> list:
         symbol_index_dict = {4: "-", 7: "-", 10: "T", 13: ":", 16: ":"}
         for i in range(19):
             if not d["date"][i].isdigit():
-                if d.get("date")[i] != symbol_index_dict.get(i):
+                if d.get("date", "")[i] != symbol_index_dict.get(i):
                     print("Транзакция имеет некорректный формат даты")
                     break
 

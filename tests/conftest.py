@@ -113,7 +113,7 @@ def log_str_empty():
 
 @pytest.fixture
 def invalid_elements_data():
-    return [dict(), {'1': 1}, [], (1, 2, 3)]
+    return [dict(), {"1": 1}, [], (1, 2, 3)]
 
 
 @pytest.fixture
@@ -130,9 +130,11 @@ def dicts_list_invalid_type():
 
 @pytest.fixture
 def dicts_list_incorrect_date():
-    return[{"id": 594226727, "state": "EXECUTED", "date": "2o18-o9-o3T23:27:o1.533689"},
-           {"id": 615064591, "state": "CANCELED", "date": "2019_10_14T08:21:33.419441"},
-           {"id": 594356727, "state": "EXECUTED", "date": "2011-1-2T12:57:1.345555"}]
+    return [
+        {"id": 594226727, "state": "EXECUTED", "date": "2o18-o9-o3T23:27:o1.533689"},
+        {"id": 615064591, "state": "CANCELED", "date": "2019_10_14T08:21:33.419441"},
+        {"id": 594356727, "state": "EXECUTED", "date": "2011-1-2T12:57:1.345555"},
+    ]
 
 
 @pytest.fixture
