@@ -16,7 +16,7 @@ utils_logger.setLevel(logging.DEBUG)
 
 
 def get_transactions(path_to_file: str) -> List[Dict]:
-    """Возвращает список словарей-транзакций из указанного файла"""
+    """Возвращает список словарей-транзакций из указанного JSON-файла"""
 
     utils_logger.info("Вызвана функция get_transactions")
     try:
@@ -52,8 +52,8 @@ def get_amount_rubles(transaction: dict) -> float:
             return float(transaction["operationAmount"]["amount"])
 
         else:
-            symbol_index_dict = {4: "-", 7: "-", 10: "T", 13: ":", 16: ":", 19: "."}
-            for i in range(len(transaction["date"])):
+            symbol_index_dict = {4: "-", 7: "-", 10: "T", 13: ":", 16: ":"}
+            for i in range(19):
                 if not transaction["date"][i].isdigit():
                     if transaction["date"][i] != symbol_index_dict[i]:
                         utils_logger.error("Дата транзакции имеет некорректный формат, работа завршена с ошибкой")
@@ -78,5 +78,6 @@ def get_amount_rubles(transaction: dict) -> float:
                 utils_logger.warning("Неудачная поптка обращения к внешнему ресурсу")
                 return 0.0
     else:
-        utils_logger.error("Некорректный формат данных, работа завершена с ошибкой")
-        raise ValueError("Некорректный формат данных")
+        utils_logger.error("Некорректный формат данных")
+        print("Неполные сведения о транзакции")
+        return 0.0
